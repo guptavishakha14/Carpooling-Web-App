@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>SB Admin 2 - Login</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <!-- <link href="{% static 'css/mapStyle.css' %}" rel="stylesheet" type="text/css"> -->
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin-2.css' %}" rel="stylesheet">
+
+   <style>
+      .img-container {
+        text-align: center;
+        display: block;
+        position: relative;
+        top: 10%;
+      }
+    </style>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map-canvas{
+        height: 60%;
+        width: 60%;
+      }
+    </style>
+    <script src="{% static 'js/getLocate.js' %}"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoKchHu0jw6n4aCczb7S6ELNhN_ZwcV1Y&libraries=places&callback=initMap"></script>
+</head>
+
+<body class="bg-gradient-primary" style = "min-height: 100vh ; min-width: 100vh ;  background-image: url('/static/images/cab.gif');">
+
+  <div class="container">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-xl-10 col-lg-12 col-md-9">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row" style="background-color: rgb(224, 240, 250);">
+              <div class="col-lg-6 d-none d-lg-block"> 
+                 <span class="img-container"> <!-- Inline parent element -->
+                  <img src="{% static 'images/carpool1.jpeg' %}" alt="Carpool" align = "center"/>
+                 </span>
+              </div>
+              <div class="col-lg-6">
+                <div class="p-5">
+                  <div class="text-center">
+                    <h1 class="h4 text-gray-900 mb-4">All set to go!!</h1>
+                  </div>
+                  <form action="{% url 'driver:driverInfo' %}" name = "driverInfo" method = "post" class= "driver">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <input type="hidden" class="form-control form-control-user" name = "destination" id="map-search" value = {{dest}}>
+                       <input type="hidden" id="lat" name="latVal">
+                       <input type="hidden" id="lng" name="lngVal">
+                       <input type="hidden" id = "userId" name = "userId" value = {{username}}>
+                    </div>
+                    <input type="submit" class="btn btn-primary btn-user btn-block" value="Submit">
+                    <hr>
+                  </form>
+                  <hr>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="map-canvas"></div>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+  {% if loginFail == True %}
+   <script> alert("Password is incorrect!") </script>
+  {% endif %}
+
+  {% if userExist == False %}
+   <script> alert("User Id does not exist!") </script>
+  {% endif %}
+  <script type="text/javascript">
+      console.log("hello ajax")
+
+      function redirectPost(url, data) {
+        var form = document.createElement('form');
+        document.body.appendChild(form);
+        form.method = 'post';
+        form.action = url;
+        for (var name in data) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = data[name];
+            form.appendChild(input);
+        }
+        form.submit();
+    }
+
+      function wait(ms) { 
+        const start = performance.now(); 
+        while(performance.now() - start < ms); 
+      }
+
+      //getRider();
+      var destPoint = '{{dest}}'
+      var userID = '{{username}}'
+
+      function getRider(callback) {
+        console.log("in ajax")
+        //initMap()
+        console.log("after initMap")
+        console.log(document.getElementById('map-search').value)
+
+        $.ajax({
+          type: "GET",
+          url: '{% url "driver:searchRider"%}',
+          data: {
+            id : userID,
+            liveLat : document.getElementById('lat').value,
+            liveLong : document.getElementById('lng').value,
+            destination : destPoint
+          },
+          datatype: "json",
+          success: function(result) {
+          console.log(result.rideList) //Here is the list of potential rides after algo: Iterate over this and do dynamic render
+          console.log("ride Accepted")  //of Cards using JS. Aslo check for empty or something
+
+          },
+          error: function() {
+              console.log("There was an error.");
+              // Want to repeat AJAX call also in case of error? 
+              // Then just uncomment the following two lines:
+          }
+      });
+    
+    }
+
+      $(document).ready(function(){
+             console.log("Calling getRider once more")
+             setInterval(getRider,120000);
+      });
+
+      // window.addEventListener('load',function(){
+      //   getRider();
+      // },false);
+
+  </script>
+</body>
+
+</html>
+
+
+
+
+
+<!-- function getRider(callback) {
+        console.log("in ajax")
+        //initMap()
+        console.log("after initMap")
+        console.log(document.getElementById('map-search').value)
+  
+          $.ajax({
+              type: "GET",
+              url: '{% url "driver:searchRider"%}',
+              data: {
+                id : userID,
+                liveLat : document.getElementById('lat').value,
+                liveLong : document.getElementById('lng').value,
+                destination : destPoint
+              },
+              datatype: "json",
+              success: function(result) {
+              var json = result['userId'];
+
+              if(result.success) { 
+                  console.log("Ride Accepted!------------------------------");
+                  console.log(result.rideLi)
+                  //UNCOMMENT - to redirect
+                  //redirectPost('{% url "rider:rideSuccessful"%}', { userId:result['userId']})
+              }else{
+                  console.log("Response not yet met.");
+                  //console.log(json);
+                  wait(500);
+                  console.log("calling again")
+                  getRider();
+              }
+          },
+          error: function() {
+              console.log("There was an error.");
+              // Want to repeat AJAX call also in case of error? 
+              // Then just uncomment the following two lines:
+              wait(1000);
+              getRider();
+          }
+          });
+      }
+
+      window.addEventListener('load',function(){
+        getRider();
+      },false);
+ -->

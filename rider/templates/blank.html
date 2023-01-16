@@ -1,0 +1,866 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>HitchRide - Rider DashBoard</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin-2.css' %}" rel="stylesheet">
+  <style>
+
+::-webkit-scrollbar
+{
+  display: none;
+}
+    body
+    {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+
+    }
+    .img-container {
+      text-align: center;
+      display: block;
+      position: relative;
+      top: 130px;
+    }
+    .box{
+      margin-top:2%;
+      margin-left: auto;
+      margin-right: auto;
+      width:50%;
+      height:20%;
+      display: block;
+      text-align: center;
+      color: red;
+    }
+    .mapBox{
+      margin-top:2%;
+      margin-left:auto;
+      margin-right: auto;
+      width:60%;
+      height:60%;
+      display: block;
+    }
+
+    .container-fluid
+    {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      margin-left: -7rem;
+    }
+
+
+  </style>
+  <style>
+    /* Always set the map height explicitly to define the size of the div
+     * element that contains the map. */
+    #map-canvas{
+     min-width: 80%;
+     min-height: 80%;
+    }
+  </style>
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">HitchRide</div>
+      </a>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <!-- Nav Item - Dashboard -->
+      <li class="nav-item">
+        <a class="nav-link" href="drive_or_ride.html">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Dashboard</span></a>
+      </li>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Interface
+      </div>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      <!-- <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>Components</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Custom Components:</h6>
+            <a class="collapse-item" href="buttons.html">Buttons</a>
+            <a class="collapse-item" href="cards.html">Cards</a>
+          </div>
+        </div>
+      </li> -->
+
+      <!-- Nav Item - Utilities Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Utilities</span>
+        </a>
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Custom Utilities:</h6>
+            <a class="collapse-item" href='{% url "rider:ride"%}'>Book-Ride</a>
+            <a class="collapse-item" href='{% url "driver:driverHome"%}'>Drive</a>
+            <a class="collapse-item" href='{% url "logPage:index"%}'>Login</a>
+            {% comment %} <a class="collapse-item" href="">Other</a> {% endcomment %}
+          </div>
+        </div>
+      </li>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Addons
+      </div>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      {% comment %} <li class="nav-item active">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-folder"></i>
+          <span>Pages</span>
+        </a>
+        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Login Screens:</h6>
+            <a class="collapse-item active" href='{% url "logPage:index"%}'>Login</a>
+            <a class="collapse-item active" href='{% url "logPage:register"%}'>Register</a>
+            <a class="collapse-item active" href="">Change Password</a>
+          </div>
+        </div>
+      </li> {% endcomment %}
+
+      <!-- Nav Item - Charts -->
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'logPage:forget' %}">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Change Password</span></a>
+      </li>
+
+      <!-- Nav Item - Tables -->
+      {% comment %} <li class="nav-item">
+        <a class="nav-link" href="tables.html">
+          <i class="fas fa-fw fa-table"></i>
+          <span>Coupons</span></a>
+      </li> {% endcomment %}
+
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+
+          <!-- Topbar Search -->
+          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                  <i class="fas fa-search fa-sm"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none">
+              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                <form class="form-inline mr-auto w-100 navbar-search">
+                  <div class="input-group">
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li>
+
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-danger badge-counter"></span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Alerts Center
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-primary">
+                      <i class="fas fa-file-alt text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">Dec 28, 2022</div>
+                    <span class="font-weight-bold">Ride Completed from JNEC to Bajajnagar!</span>
+                  </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-success">
+                      <i class="fas fa-donate text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">Dec 25, 2022</div>
+                    <span class="font-weight-bold">Ride Completed from Bajajnagar to JNEC!</span>
+                  </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-warning">
+                      <i class="fas fa-exclamation-triangle text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">Dec 22, 2022</div>
+                    <span class="font-weight-bold">Ride Completed JNEC to Prozone!</span>
+                  </div>
+                </a>
+                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              </div>
+            </li>
+
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-envelope fa-fw"></i>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter"></span>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                  Message Center
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="dropdown-list-image mr-3">
+                    <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">
+                    <div class="status-indicator bg-success"></div>
+                  </div>
+                  <div class="font-weight-bold">
+                    <div class="text-truncate">Hi there! Thank you for your first ride.</div>
+                    <div class="small text-gray-500">Neha Sharma · 58m</div>
+                  </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="dropdown-list-image mr-3">
+                    <img class="rounded-circle" src="https://source.unsplash.com/AU4VPcFN4LE/60x60" alt="">
+                    <div class="status-indicator"></div>
+                  </div>
+                  <div>
+                    <div class="text-truncate">Hi there! Welcome on HitchRide</div>
+                    <div class="small text-gray-500">User</div>
+                  </div>
+                </a>
+                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+              </div>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-success small">{{paramDict.userId}}</span>
+              </a>
+              <!-- Dropdown - User Information -->
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                {% comment %} <a class="dropdown-item" href="#">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Profile
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Settings
+                </a> {% endcomment %}
+                {% comment %} <a class="dropdown-item" href="{% url 'logPage:forget' %}">
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Change Password
+                </a>
+                <div class="dropdown-divider"></div> {% endcomment %}
+                <a class="dropdown-item" href='{% url "logPage:index"%}'>
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid" id ="proceedtopickup">
+
+          <!-- Page Heading -->
+          <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
+
+        </div>
+        <!-- /.container-fluid -->
+        <div class = "container-fluid" id ="processingdiv">
+          <img id="processingimg" src="{% static 'images/processing.gif' %}">
+        </div>
+        <div class = "mapBox" id="map-canvas"></div>
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; HitchRide 2022</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="login.html">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
+  <script>
+    var pickup = '{{paramDict.pickup}}',
+    liveLat = '{{paramDict.latVal}}',
+    liveLng = '{{paramDict.lngVal}}'
+
+    function initMap() {
+
+    console.log("initMap")
+    console.log(pickup)
+    console.log(liveLat)
+    console.log(liveLng)
+    var directionsService = new google.maps.DirectionsService();
+    var directionsRenderer = new google.maps.DirectionsRenderer();
+    var map = new google.maps.Map(document.getElementById('map-canvas'), {
+      zoom: 7,
+      center: {lat: 41.85 , lng: -87.65}
+    });
+    directionsRenderer.setMap(map);
+    calculateAndDisplayRoute(directionsService, directionsRenderer);
+    console.log("ended initMap")
+
+    // document.getElementById('start').addEventListener('change', onChangeHandler);
+    // document.getElementById('end').addEventListener('change', onChangeHandler);
+  }
+  
+  function calculateAndDisplayRoute(directionsService, directionsRenderer ) {
+    console.log("In calcandDisplay")
+    // console.log(params)
+    console.log(pickup)
+    console.log(liveLat)
+    console.log(liveLng)
+    console.log("calculate")
+
+    directionsService.route(
+    {
+      origin: new google.maps.LatLng(liveLat , liveLng),
+      destination: pickup,
+      travelMode: 'DRIVING'
+    },
+    function(response, status) {
+      if (status === 'OK') {
+        directionsRenderer.setDirections(response);
+      } else {
+        window.alert('Directions request failed due to ' + status);
+      }
+    });
+  }
+
+</script>
+<script async defer
+ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoKchHu0jw6n4aCczb7S6ELNhN_ZwcV1Y&callback=initMap">
+</script>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+  <script>
+    var pickup = '{{paramDict.pickup}}',
+    liveLat = '{{paramDict.latVal}}',
+    liveLng = '{{paramDict.lngVal}}'
+
+    function initMap() {
+
+    console.log("initMap")
+    console.log(pickup)
+    console.log(liveLat)
+    console.log(liveLng)
+    var directionsService = new google.maps.DirectionsService();
+    var directionsRenderer = new google.maps.DirectionsRenderer();
+    var map = new google.maps.Map(document.getElementById('map-canvas'), {
+      zoom: 7,
+      center: {lat: 41.85 , lng: -87.65}
+    });
+    directionsRenderer.setMap(map);
+    calculateAndDisplayRoute(directionsService, directionsRenderer);
+    console.log("ended initMap")
+
+    // document.getElementById('start').addEventListener('change', onChangeHandler);
+    // document.getElementById('end').addEventListener('change', onChangeHandler);
+  }
+  
+  function calculateAndDisplayRoute(directionsService, directionsRenderer ) {
+    console.log("In calcandDisplay")
+    // console.log(params)
+    console.log(pickup)
+    console.log(liveLat)
+    console.log(liveLng)
+    console.log("calculate")
+
+    directionsService.route(
+    {
+      origin: new google.maps.LatLng(liveLat , liveLng),
+      destination: pickup,
+      travelMode: 'DRIVING'
+    },
+    function(response, status) {
+      if (status === 'OK') {
+        directionsRenderer.setDirections(response);
+      } else {
+        window.alert('Directions request failed due to ' + status);
+      }
+    });
+  }
+
+</script>
+<script async defer
+ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoKchHu0jw6n4aCczb7S6ELNhN_ZwcV1Y&callback=initMap">
+</script>
+
+  <script type="text/javascript">
+      console.log("hello ajax")
+
+      function getMyJson() {
+        console.log("in ajax")
+        var userID = '{{paramDict.userId}}'
+        console.log(userID)
+        console.log(window.update)
+          $.ajax({
+              type: "GET",
+              url: '{% url "rider:statusUpdate"%}',
+              data: {
+                id : userID,
+                update : window.update
+              },
+              datatype: "json",
+              success: function(result) {
+              var driverId = result['driverId'];
+              var complete = result['complete']
+              var cost = result['cost']
+              var expTime = result['expectedTime']
+              if(result.success) { 
+                  console.log("Ride Accepted!");
+                  if(complete && window.nomoreup){
+                    window.update =true;
+                    window.nomoreup =false;
+                    var image_x = document.getElementById('logistics');
+                    image_x.parentNode.removeChild(image_x);
+                    image_x = document.getElementById('finalride');
+                    image_x.parentNode.removeChild(image_x);
+
+                    var str = '<div class="row" id ="feedback">'+
+                  ''+
+                  '            <!-- Earnings (Monthly) Card Example -->'+
+                  '            <div class="col-xl-3 col-md-6 mb-4">'+
+                  '              <div class="card border-left-warning shadow h-100 py-2">'+
+                  '                <div class="card-body">'+
+                  '                  <div class="row no-gutters align-items-center">'+
+                  '                    <div class="col mr-2">'+
+                  '                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Ride Rating</div>'+
+                  '                      <div class="h7 mb-0 font-weight-bold text-gray-600">'+
+                  
+                 
+                  '<style>'+
+                  '*{'+
+                  '    margin: 0;'+
+                  '    padding: 0;'+
+                  '}'+
+                  '.rate {'+
+                  '    float: left;'+
+                  '   height: 46px;'+
+                  '    padding: 0 10px;'+
+                  '}'+
+                  '.rate:not(:checked) > input {'+
+                  '    position:absolute;'+
+                  '    top:-9999px;'+
+                  '}'+
+                  '.rate:not(:checked) > label {'+
+                  '    float:right;'+
+                  '    width:1em;'+
+                  '    overflow:hidden;'+
+                  '    white-space:nowrap;'+
+                  '    cursor:pointer;'+
+                  '    font-size:30px;'+
+                  '    color:#ccc;'+
+                  '}'+
+                  '.rate:not(:checked) > label:before {'+
+                  '    content: \'★ \'; '+
+                  '}'+
+                  '.rate > input:checked ~ label {'+
+                  '    color: #ffc700;    '+
+                  '}'+
+                  '.rate:not(:checked) > label:hover,'+
+                  '.rate:not(:checked) > label:hover ~ label {'+
+                  '    color: #deb217;  '+
+                  '}'+
+                  '.rate > input:checked + label:hover,'+
+                  '.rate > input:checked + label:hover ~ label,'+
+                  '.rate > input:checked ~ label:hover,'+
+                  '.rate > input:checked ~ label:hover ~ label,'+
+                  '.rate > label:hover ~ input:checked ~ label {'+
+                  '    color: #c59b08;'+
+                  '}'+
+                  
+                  
+                  '</style>'+
+                  
+                 
+                  '                         <div class="rate">'+
+                  '                            <input type="radio" id="star5" name="rate" value="5" />'+
+                  '                            <label for="star5" title="text">5 stars</label>'+
+                  '                            <input type="radio" id="star4" name="rate" value="4" />'+
+                  '                            <label for="star4" title="text">4 stars</label>'+
+                  '                            <input type="radio" id="star3" name="rate" value="3" />'+
+                  '                            <label for="star3" title="text">3 stars</label>'+
+                  '                            <input type="radio" id="star2" name="rate" value="2" />'+
+                  '                            <label for="star2" title="text">2 stars</label>'+
+                  '                            <input type="radio" id="star1" name="rate" value="1" />'+
+                  '                            <label for="star1" title="text">1 star</label>'+
+                  '                         </div>'+
+                  '                       </div>'+
+                  '                    </div>'+
+                  '                    <div class="col-auto">'+
+                  '                      <i class="fas fa-comments fa-2x "></i>'+
+                  '                    </div>'+
+                  '                  </div>'+
+                  '                </div>'+
+                  '              </div>'+
+                  '            </div>'+
+                  '</div>'+
+                  ''+
+                  '<div class="row" id ="logistics">'+
+                  ''+
+                  '            <!-- Earnings (Monthly) Card Example -->'+
+                  '            <div class="col-xl-3 col-md-6 mb-4">'+
+                  '              <div class="card border-left-primary shadow h-100 py-2">'+
+                  '                <div class="card-body">'+
+                  '                  <div class="row no-gutters align-items-center">'+
+                  '                    <div class="col mr-2">'+
+                  '                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Driver Contact</div>'+
+                  '                      <div class="h7 mb-0 font-weight-bold text-gray-600">'+driverId+'</div>'+
+                  '                    </div>'+
+                  '                    <div class="col-auto">'+
+                  '                      <i class="fas fa-phone fa-2x "></i>'+
+                  '                    </div>'+
+                  '                  </div>'+
+                  '                </div>'+
+                  '              </div>'+
+                  '            </div>'+
+                  ''+
+                  '            <!-- Earnings (Monthly) Card Example -->'+
+                  '            <div class="col-xl-3 col-md-6 mb-4">'+
+                  '              <div class="card border-left-warning shadow h-100 py-2">'+
+                  '                <div class="card-body">'+
+                  '                  <div class="row no-gutters align-items-center">'+
+                  '                    <div class="col mr-2">'+
+                  '                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Destination</div>'+
+                  '                      <div class="h7 mb-0 font-weight-bold text-gray-600">'+'{{paramDict.destination}}'+'</div>'+
+                  '                    </div>'+
+                  '                    <div class="col-auto">'+
+                  '                      <i class="fas fa-location-arrow fa-2x "></i>'+
+                  '                    </div>'+
+                  '                  </div>'+
+                  '                </div>'+
+                  '              </div>'+
+                  '            </div>'+
+                  ''+
+                  '            <!-- Earnings (Monthly) Card Example -->'+
+                  '            <div class="col-xl-3 col-md-6 mb-4" id="statuscard">'+
+                  '              <div class="card border-left-info shadow h-100 py-2">'+
+                  '                <div class="card-body">'+
+                  '                  <div class="row no-gutters align-items-center">'+
+                  '                    <div class="col mr-2">'+
+                  '                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Ride status</div>'+
+                  '                      <div class="row no-gutters align-items-center">'+
+                  '                        <div class="col-auto">'+
+                  '                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">'+100+'%'+'</div>'+
+                  '                        </div>'+
+                  '                        <div class="col">'+
+                  '                          <div class="progress progress-sm mr-2">'+
+                  '                            <div class="progress-bar bg-info" role="progressbar" style="width: '+100+'%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>'+
+                  '                          </div>'+
+                  '                        </div>'+
+                  '                      </div>'+
+                  '                    </div>'+
+                  '                    <div class="col-auto">'+
+                  '                     <i class="fas fa-hourglass-start fa-2x "></i>'+
+                  '                    </div>'+
+                  '                  </div>'+
+                  '                </div>'+
+                  '              </div>'+
+                  '            </div>'+
+                  ''+
+                  '            <!-- Pending Requests Card Example -->'+
+                  '            <div class="col-xl-3 col-md-6 mb-4" id="costcard">'+
+                  '              <div class="card border-left-success shadow h-100 py-2">'+
+                  '                <div class="card-body">'+
+                  '                  <div class="row no-gutters align-items-center">'+
+                  '                    <div class="col mr-2">'+
+                  '                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Ride Cost</div>'+
+                  '                      <div class="h5 mb-0 font-weight-bold text-gray-800">'+cost+'</div>'+
+                  '                    </div>'+
+                  '                    <div class="col-auto">'+
+                  '                      <i class="fas fa-rupee-sign fa-2x "></i>'+
+                  '                    </div>'+
+                  '                  </div>'+
+                  '                </div>'+
+                  '              </div>'+
+                  '            </div>'+
+                  '          </div>';
+                  
+                    
+                  document.getElementById("processingdiv").innerHTML = str;
+                  var str3 = "<h1 class=\"h5 mb-4 text-primary\">Ride Completed Please Pay the driver</h1>";
+                  document.getElementById("proceedtopickup").innerHTML = str3;
+
+                  }else if(window.cond){
+                  window.cond =false
+                  var image_x = document.getElementById('processingimg');
+                  image_x.parentNode.removeChild(image_x);
+                  var str = '<div class="row" id ="logistics">'+
+                  ''+
+                  '            <!-- Earnings (Monthly) Card Example -->'+
+                  '            <div class="col-xl-3 col-md-6 mb-4">'+
+                  '              <div class="card border-left-primary shadow h-100 py-2">'+
+                  '                <div class="card-body">'+
+                  '                  <div class="row no-gutters align-items-center">'+
+                  '                    <div class="col mr-2">'+
+                  '                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Driver Contact</div>'+
+                  '                      <div class="h7 mb-0 font-weight-bold text-gray-600">'+driverId+'</div>'+
+                  '                    </div>'+
+                  '                    <div class="col-auto">'+
+                  '                      <i class="fas fa-phone fa-2x "></i>'+
+                  '                    </div>'+
+                  '                  </div>'+
+                  '                </div>'+
+                  '              </div>'+
+                  '            </div>'+
+                  ''+
+                  '            <!-- Earnings (Monthly) Card Example -->'+
+                  '            <div class="col-xl-3 col-md-6 mb-4">'+
+                  '              <div class="card border-left-warning shadow h-100 py-2">'+
+                  '                <div class="card-body">'+
+                  '                  <div class="row no-gutters align-items-center">'+
+                  '                    <div class="col mr-2">'+
+                  '                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Destination</div>'+
+                  '                      <div class="h7 mb-0 font-weight-bold text-gray-600">'+'{{paramDict.destination}}'+'</div>'+
+                  '                    </div>'+
+                  '                    <div class="col-auto">'+
+                  '                      <i class="fas fa-location-arrow fa-2x "></i>'+
+                  '                    </div>'+
+                  '                  </div>'+
+                  '                </div>'+
+                  '              </div>'+
+                  '            </div>'+
+                  ''+
+                  '            <!-- Earnings (Monthly) Card Example -->'+
+                  '            <div class="col-xl-3 col-md-6 mb-4" id="statuscard">'+
+                  '              <div class="card border-left-info shadow h-100 py-2">'+
+                  '                <div class="card-body">'+
+                  '                  <div class="row no-gutters align-items-center">'+
+                  '                    <div class="col mr-2">'+
+                  '                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Ride status</div>'+
+                  '                      <div class="row no-gutters align-items-center">'+
+                  '                        <div class="col-auto">'+
+                  '                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">'+window.statnum+'%'+'</div>'+
+                  '                        </div>'+
+                  '                        <div class="col">'+
+                  '                          <div class="progress progress-sm mr-2">'+
+                  '                            <div class="progress-bar bg-info" role="progressbar" style="width: '+window.statnum+'%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>'+
+                  '                          </div>'+
+                  '                        </div>'+
+                  '                      </div>'+
+                  '                    </div>'+
+                  '                    <div class="col-auto">'+
+                  '                     <i class="fas fa-hourglass-start fa-2x "></i>'+
+                  '                    </div>'+
+                  '                  </div>'+
+                  '                </div>'+
+                  '              </div>'+
+                  '            </div>'+
+                  ''+
+                  '            <!-- Pending Requests Card Example -->'+
+                  '            <div class="col-xl-3 col-md-6 mb-4" id="costcard">'+
+                  '              <div class="card border-left-success shadow h-100 py-2">'+
+                  '                <div class="card-body">'+
+                  '                  <div class="row no-gutters align-items-center">'+
+                  '                    <div class="col mr-2">'+
+                  '                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Expected Time</div>'+
+                  '                      <div class="h5 mb-0 font-weight-bold text-gray-800">'+ (expTime) +'</div>'+
+                  '                    </div>'+
+                  '                    <div class="col-auto">'+
+                  '                      <i class="fas fa-clock fa-2x "></i>'+
+                  '                    </div>'+
+                  '                  </div>'+
+                  '                </div>'+
+                  '              </div>'+
+                  '            </div>'+
+                  '          </div>';
+                  var str2 = "<h1 id=\"finalride\" class=\"h5 mb-4 text-primary\">Ride Accepted Proceed to Pickup Point</h1>";
+                  document.getElementById("processingdiv").innerHTML = str;
+                  document.getElementById("proceedtopickup").innerHTML = str2;
+                  }
+                  
+              }else{
+                  console.log("Response not yet met.");
+                  console.log(driverId);
+                  console.log(complete);
+                  console.log(cost);
+                  
+                  console.log("calling again")
+              }
+          },
+          error: function() {
+              console.log("There was an error.");
+              // Want to repeat AJAX call also in case of error? 
+              // Then just uncomment the following two lines:
+              // getMyJson();
+          }
+          });
+      }
+
+      $(document).ready(function(){
+        window.cond =true;
+        window.update = false;
+        window.statnum =0;
+        window.nomoreup =true;
+        console.log("Calling getRider once more")
+        setInterval(getMyJson,1000);
+        });
+      
+  </script>
+  
+
+</body>
+
+</html>
