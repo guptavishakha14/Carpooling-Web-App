@@ -77,7 +77,7 @@ The API is used to make calls to different APIs using Python.
 ## Authors
 
 * [Vishakha Gupta](https://github.com/guptavishakha14)
-* [Saurabh Fulshankar]()
+* [Saurabh Fulshankar](https://github.com/saurabhfulshankar)
 * [Kartiki Deshmukh](https://github.com/kartiki001)
 * [Prajwal Patil](https://github.com/PrajwalP7295)
 
