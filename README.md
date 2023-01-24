@@ -5,7 +5,7 @@ Carpooling Web App is intended to help the user to share car rides with other us
 
 The carpooling software is designed and developed in Django framework using GoogleMaps API.
 
-Car-Pooling Web App is aimed toward a person who is a frequent traveller and is looking for cheap and comfortable mode of transport. It will prove beneficial for office commuters who are headed on a common route and are willing to share the travel cost. Anyone can opt to provide a drive, thus reducing his/her expense. 
+Carpooling Web App is aimed toward a person who is a frequent traveller and is looking for cheap and comfortable mode of transport. It will prove beneficial for office commuters who are headed on a common route and are willing to share the travel cost. Anyone can opt to provide a drive, thus reducing his/her expense. 
 
 
 
